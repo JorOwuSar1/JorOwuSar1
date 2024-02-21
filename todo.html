@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo List</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #todo-container {
+      width: 550px;
+      background-color: #fff;
+      padding: 60px;
+      border-radius: 16px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #todo-list {
+      list-style: none;
+      padding: 30px;
+    }
+
+    .todo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+
+    .todo-item input[type="text"] {
+      border: none;
+      outline: none;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+
+    .todo-item button {
+      background-color: #555050;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="todo-container">
+  <h2>Todo List</h2>
+  <ul id="todo-list"></ul>
+  <div>
+    <input type="text" id="newTodo" placeholder="Add A New Todo">
+    <button onclick="addTodo()">Add</button>
+  </div>
+</div>
+
+<script>
+
+  const initialTodos = [
+    { id: 1, text: 'Learn HTML', completed: false },
+    { id: 2, text: 'Practice CSS', completed: false },
+    { id: 3, text: 'Build a Todo App', completed: false }
+  ];
+
+  let todos = [...initialTodos];
+
+  function renderTodos() {
+    const todoList = document.getElementById('todo-list');
+    todoList.innerHTML = '';
+
+    todos.forEach(todo => {
+      const listItem = document.createElement('li');
+      listItem.className = 'todo-item';
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = todo.text;
+      input.addEventListener('change', (event) => updateTodoText(todo.id, event.target.value));
+
+      const deleteButton = document.createElement('button');
+      deleteButton.innerText = 'Delete';
+      deleteButton.addEventListener('click', () => deleteTodo(todo.id));
+
+      const updateButton = document.createElement('button');
+      updateButton.innerText = 'Update';
+      updateButton.addEventListener('click', () => UpdateTodo(todo.id));
+
+      listItem.appendChild(input);
+      listItem.appendChild(deleteButton);
+      todoList.appendChild(listItem);
+      listItem.appendChild(updateButton);
+    });
+  }
+
+  function addTodo() {
+    const newTodoInput = document.getElementById('newTodo');
+    const newTodoText = newTodoInput.value.trim();
+
+    if (newTodoText !== '') {
+      const newTodo = {
+        id: todos.length + 1,
+        text: newTodoText,
+        completed: false
+      };
+
+      todos.push(newTodo);
+      newTodoInput.value = '';
+      renderTodos();
+    }
+  }
+
+  function updateTodoText(id, newText) {
+    todos = todos.map(todo => (todo.id === id ? { ...todo, text: newText } : todo));
+    renderTodos();
+  }
+
+  function deleteTodo(id) {
+    todos = todos.filter(todo => todo.id !== id);
+    renderTodos();
+  }
+
+
+  renderTodos();
+</script>
+
+</body>
+</html>
